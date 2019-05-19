@@ -23,6 +23,10 @@ public class AuthController {
     @Autowired
     UserService userService;
 
+    /**
+     * 测试接口 登陆可访问
+     * @return "部署成功了哈!"
+     */
     @GetMapping("/hello")
     @RequiresRoles(logical = Logical.OR, value = {"admin", "guest"})
     public String hello(){

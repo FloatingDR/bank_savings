@@ -24,7 +24,7 @@
   </select>
   <select id="getRoleStyle" resultType="string" parameterType="string">
     select role_style
-    from user right join role
+    from user inner join role
     on user.role_id=role.role_id
     where username=#{username}
   </select>

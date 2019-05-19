@@ -19,9 +19,9 @@ import java.util.Date;
 public class JWTUtil {
 
     /**
-     * 24h后过期
+     * 3*24h后过期
      */
-    private static final long EXPIRE_TIME = 60 * 24 * 60 * 1000;
+    private static final long EXPIRE_TIME = 3 * 24 * 60* 60 * 1000;
 
     /**
      * 校验token是否正确

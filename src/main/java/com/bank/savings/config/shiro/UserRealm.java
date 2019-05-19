@@ -47,7 +47,6 @@ public class UserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
         String username = JWTUtil.getUsername(principals.getPrimaryPrincipal().toString());
-        User user = userMapper.getInfoByUsername(username);
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         //获得该用户角色
         String roleStyle=userMapper.getRoleStyle(username);
