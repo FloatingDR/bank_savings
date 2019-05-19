@@ -46,10 +46,10 @@ public class UserRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        String username = JWTUtil.getUsername(principals.getPrimaryPrincipal().toString());
+        String bankCardNumber = JWTUtil.getBankCardNumber(principals.getPrimaryPrincipal().toString());
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         //获得该用户角色
-        String roleStyle=userMapper.getRoleStyle(username);
+        String roleStyle=userMapper.getRoleStyleByBCNumber(bankCardNumber);
         Set<String> roleStyleSet = new HashSet<>();
         roleStyleSet.add(roleStyle);
         //设置该用户拥有的角色和权限
@@ -67,18 +67,18 @@ public class UserRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authToken) throws AuthenticationException {
         String token=(String)authToken.getCredentials();
         //解密获得username,用于和数据库对比
-        String username= JWTUtil.getUsername(token);
+        String bankCardNumber= JWTUtil.getBankCardNumber(token);
 
-        if(username==null){
-            throw new ExpiredCredentialsException("token invalid");
+        if(bankCardNumber==null){
+            throw new AuthenticationException("token invalid");
         }
-        User user=userMapper.getInfoByUsername(username);
+        User user=userMapper.getUserByBCNumber(bankCardNumber);
 
         if(user==null){
             throw new UnknownAccountException("user not found");
         }
 
-        if (!JWTUtil.verify(token, username, user.getPassword())) {
+        if (!JWTUtil.verify(token, bankCardNumber, user.getLoginPassword())) {
             throw new IncorrectCredentialsException("username or password error");
         }
         return new SimpleAuthenticationInfo(token, token,"UserRealm");

@@ -26,15 +26,15 @@ public class JWTUtil {
     /**
      * 校验token是否正确
      * @param token 密钥
-     * @param username 用户名
-     * @param password 用户的密码
+     * @param bankCardNumber 银行卡号
+     * @param loginPassword 用户的登陆密码
      * @return 是否正确
      */
-    public static boolean verify(String token, String username, String password){
+    public static boolean verify(String token, String bankCardNumber, String loginPassword){
         try{
-            Algorithm algorithm=Algorithm.HMAC256(password);
+            Algorithm algorithm=Algorithm.HMAC256(loginPassword);
             JWTVerifier verifier= JWT.require(algorithm)
-                    .withClaim("username",username)
+                    .withClaim("bankCardNumber",bankCardNumber)
                     .build();
             /**
              * verifier.verify返回一个JWT.decode(token)
@@ -49,14 +49,14 @@ public class JWTUtil {
     }
 
     /**
-     * 获取token中包含的用户名
+     * 获取token中包含的银行卡号
      * @param token
-     * @return username
+     * @return bank_card_number
      */
-    public static String getUsername(String token){
+    public static String getBankCardNumber(String token){
         try{
             DecodedJWT jwt=JWT.decode(token);
-            return jwt.getClaim("username").asString();
+            return jwt.getClaim("bankCardNumber").asString();
         }catch (JWTDecodeException e){
             return null;
         }
@@ -64,16 +64,16 @@ public class JWTUtil {
 
     /**
      * 生成签名，过期时间为 EXPIRE_TIME
-     * @param username 用户名
-     * @param password 用户的密码
+     * @param bankCardNumber 银行卡号
+     * @param loginPassword 用户的登陆密码
      * @return 加密的token
      */
-    public static String sign(String username,String password){
+    public static String sign(String bankCardNumber,String loginPassword){
         try {
             Date date=new Date(System.currentTimeMillis()+EXPIRE_TIME);
-            Algorithm algorithm=Algorithm.HMAC256(password);
+            Algorithm algorithm=Algorithm.HMAC256(loginPassword);
             return JWT.create()
-                    .withClaim("username",username)
+                    .withClaim("bankCardNumber",bankCardNumber)
                     .withExpiresAt(date)
                     .sign(algorithm);
         }catch (UnsupportedEncodingException e){

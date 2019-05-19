@@ -2,6 +2,9 @@ package com.bank.savings.controller;
 
 import com.bank.savings.bean.ResponseBean;
 import com.bank.savings.model.User;
+import com.bank.savings.model.UserInfo;
+import com.bank.savings.model.require.UserChangePassword;
+import com.bank.savings.model.require.UserRegisterBean;
 import com.bank.savings.service.UserService;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -35,12 +38,12 @@ public class AuthController {
 
     /**
      * 添加用户 所有人都可以访问
-     * @param user
+     * @param userRegisterBean
      * @return ResponseBean
      */
     @PostMapping("/add")
-    public ResponseBean addUser(@RequestBody User user){
-        return userService.addUser(user);
+    public ResponseBean addUser(@RequestBody UserRegisterBean userRegisterBean){
+        return userService.addUser(userRegisterBean);
     }
 
     /**
@@ -51,6 +54,22 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseBean login(@RequestBody User user){
         return userService.login(user);
+    }
+
+    /**
+     * 注销银行卡，仅admin用户可访问
+     * @param bankCardNumber
+     * @return
+     */
+    @GetMapping("/admin_delete_bank_card/{bankCardNumber}")
+    @RequiresRoles("admin")
+    public ResponseBean deleteBankCard(@PathVariable String bankCardNumber){
+        return userService.deleteBankCardNumber(bankCardNumber);
+    }
+
+    @PostMapping("/change_password")
+    public ResponseBean changePassword(@RequestBody UserChangePassword user){
+        return userService.changePassword(user);
     }
 
 }

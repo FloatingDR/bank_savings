@@ -11,6 +11,7 @@ public class SavingsApplicationTests {
 
     @Test
     public void contextLoads() {
+        System.out.println();
     }
 
 }
